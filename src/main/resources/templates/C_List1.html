@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="jmj"/>
+    <meta name="description" content="EGOSARA 프로젝트 회원목록 페이지">
+    <title>EGOSARA_회원목록</title>
+</head>
+<body>
+<table>
+    <caption>회원목록</caption>
+    <tr>
+        <th>아이디</th>
+        <th>닉네임</th>
+        <th>이름</th>
+        <th>삭제</th>
+    </tr>
+
+    <tr th:each="list : ${cmemberList}">
+        <!-- <td th:text="${list.cId}">아이디</td> -->
+        <td><a th:text="${list.cId}" th:href="@{cView(cId=${list.cId}, cName=${list.cName})}"></a></td>
+        <td th:text="${list.cNickname}">닉네임</td>
+        <td th:text="${list.cName}">이름</td>
+
+
+        <!-- cDelete -->
+        <td><a th:if="${session.loginId eq list.cId || session.sloginId eq 'admin'}" th:href="@{cDelete(cId=${list.cId})}"><button>삭제</button></a></td>
+    </tr>
+
+</table>
+
+
+</body>
+</html>

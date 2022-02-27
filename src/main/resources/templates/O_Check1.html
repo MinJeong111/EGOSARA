@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE-edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Group" content="SDS"/>
+    <meta name="author" content="seung"/>
+    <meta name="description" content="EgoSara O_View 페이지"/>
+    <title>Spring Boot - EgoSara</title>
+</head>
+<body>
+<form action="orderingExcu" method="post">
+    <table>
+
+        <caption>주문 내역 확인</caption>
+        <tr>
+            <th>종류</th>
+            <th>상품이름</th>
+            <th>가격</th>
+            <th>선택수량</th>
+        </tr>
+
+
+        <input type="hidden" name="bId" th:value="${session.loginId}" />
+
+        <tr th:each="view : ${basList}">
+            <td th:text="${view.bType}"></td>
+            <td th:text="${view.bName}"></td>
+            <td th:text="${view.bPrice}"></td>
+            <td th:text="${view.buyNo}"></td>
+
+            <input type="hidden" name="bNum" th:value="${view.bNum}" />
+            <input type="hidden" name="bType" th:value="${view.bType}" />
+            <input type="hidden" name="bName" th:value="${view.bName}" />
+            <input type="hidden" name="bPrice" th:value="${view.bPrice}" />
+            <input type="hidden" name="buyNo" th:value="${view.buyNo}" />
+            <input type="hidden" name="bStock" th:value="${view.bStock}" />
+
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="결제하기" />
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

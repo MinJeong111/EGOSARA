@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE-edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Group" content="SDS"/>
+    <meta name="author" content="seung"/>
+    <meta name="description" content="EgoSara O_List 페이지"/>
+    <title>Spring Boot - EgoSara</title>
+</head>
+<body>
+<h2 th:text="${session.loginId} + '님의 주문내역 입니다'"></h2>
+
+<span th:each="list : ${aa}">
+    <button th:onclick="getOrderInfo([[${list.dId}]], [[${session.loginId}]])" th:text="${list.dId}"></button>
+</span>
+
+<span id="orderView"></span>
+</body>
+
+<script type="text/javascript" src="/js/jquery3.6.0.js"></script>
+<script type="text/javascript">
+
+    function getOrderInfo(dId, loginId){
+
+        $.ajax({
+            type : "POST",
+            url : "orderInfo",
+            data : {
+                "olNum" : dId,
+                "loginId" : loginId
+            },
+            dataType : "json",
+            success : function(orderList) {
+                // 성공
+                console.log(orderList);
+                printOrder(orderList);
+
+            },
+            error:function(){
+                alert("통신 에러!");
+            }
+        });
+    }
+
+    function printOrder(orderList){
+        let output = "";
+
+        output += "<table>";
+        output += "<tr>";
+        output += "<th>상품번호</th>";     // 그냥 상품번호
+        output += "<th>상품종류</th>";     // 그냥 상품 종류
+        output += "<th>구매한 상품</th>";  // [판매자]상품이름 뜨도록!!! -> 이거 클릭하면 상품정보 볼수있게 하기
+        output += "<th>구매수량</th>";    // 선택수량
+        output += "<th>가격</th>";      // 선택 수량에 따른 그 가격
+        output += "<th>상품사진</th>";    // 상품 사진
+        output += "</tr>";
+
+        for (var i in orderList){
+
+            output += "<tr>";
+            output += "<td>" + orderList[i].olBNum +"</td>";
+            output += "<td>" + orderList[i].olType +"</td>";
+            output += "<td>" + "[" + orderList[i].olsaler + "]" + orderList[i].olName +"</td>";
+            output += "<td>" + orderList[i].olBuyNo +"</td>";
+            output += "<td>" + orderList[i].olPrice * orderList[i].olBuyNo +"</td>";
+            output += "<td><img src='/img/goods/" + orderList[i].olPhoto + "' width='50px' /></td>";
+            output += "</tr>";
+        }
+
+        output += "<tr><td colspan='6'>총 결제 가격은" + orderList[0].oltotalPrice  + "원 입니다. </td></tr>"
+
+        $("#orderView").html(output);
+    }
+
+</script>
+</html>

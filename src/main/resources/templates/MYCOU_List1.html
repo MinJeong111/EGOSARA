@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="jmj"/>
+    <meta name="description" content="EGOSARA 프로젝트 내쿠폰 목록 페이지">
+    <title>EGOSARA_내쿠폰 목록</title>
+</head>
+<body>
+<table>
+    <caption>내쿠폰 목록</caption>
+    <tr>
+        <th>쿠폰번호</th>
+        <th>쿠폰이름</th>
+        <th>쿠폰내용</th>
+        <th>쿠폰가격</th>
+        <th>삭제</th>
+    </tr>
+    <tr th:each="list : ${mycouponList}">
+        <td th:text="${list.couNum}">쿠폰번호</td>
+        <td th:text="${list.couName}">쿠폰이름</td>
+        <td th:text="${list.couContent}">쿠폰내용</td>
+        <td th:text="${list.couPrice}">쿠폰가격</td>
+        <td><a th:if="${session.loginId eq session.loginId}" th:href="@{mycouDelete(cId=${session.loginId} , couNum=${list.couNum})}"><button>삭제</button></a></td>
+    </tr>
+
+</table>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>QNA 게시글 목록</title>
+</head>
+<body>
+<table>
+  <caption>게시글 목록</caption>
+  <tr>
+    <th>글번호</th>
+    <th>제목</th>
+    <th>작성자</th>
+    <th>작성일</th>
+    <th>조회수</th>
+    <th>공개여부</th>
+  </tr>
+
+  <!-- 상인일때 : 비공개 글도 보임 -->
+  <tr th:each="list : ${qnaList}" th:if="${session.sloginId ne null || session.loginId eq list.qId}">
+    <td th:text="${list.qNum}">글번호</td>
+    <td><a th:text="${list.qTitle}" th:href="@{qView(qNum=${list.qNum})}"></a></td>
+    <td th:text="${list.qId}">작성자</td>
+    <td th:text="${list.qDate}">작성일</td>
+    <td th:text="${list.qHit}">조회수</td>
+    <td th:text="${list.qPublic}">조회수</td>
+  </tr>
+
+
+  <!-- 상인이 아닐때 : 비공개 글 안보임 -->
+  <tr th:each="list : ${qnaList1}" th:if="${session.sloginId eq null}">
+    <td th:text="${list.qNum}">글번호</td>
+    <td><a th:text="${list.qTitle}" th:href="@{qView(qNum=${list.qNum})}"></a></td>
+    <td th:text="${list.qId}">작성자</td>
+    <td th:text="${list.qDate}">작성일</td>
+    <td th:text="${list.qHit}">조회수</td>
+    <td th:text="${list.qPublic}">조회수</td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE-edge"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="author" content="김혜영"/>
+  <meta name="description" content="페이지 설명 : EGOSARA 레시피목록 페이지"/>
+  <title>egoSara_recipe</title>
+</head>
+<body>
+
+<form action="rSearch">
+  <div>
+    <select name="selectVal">
+      <option value="rName">제목</option>
+      <option value="rId">아이디</option>
+      <option value="rTag">해시태그</option>
+    </select>
+    <input type="text" name="keyword">
+    <input type="submit" value="검색">
+  </div>
+</form>
+
+<form action="rSearch2">
+  <div>
+    <table>
+      <tr>
+        <th>종류</th>
+        <td>
+          <input type="radio" name="rType" checked="checked">전체
+          <input type="radio" name="rType" value="밑반찬">밑반찬
+          <input type="radio" name="rType" value="메인반찬">메인반찬
+          <input type="radio" name="rType" value="국/탕/찜/찌개">국/탕/찜/찌개
+          <input type="radio" name="rType" value="면/만두">면/만두
+          <input type="radio" name="rType" value="밥/죽/떡">밥/죽/떡
+          <input type="radio" name="rType" value="후식">후식
+        </td>
+      </tr>
+      <tr>
+        <th>메인재료</th>
+        <td>
+          <input type="radio" name="rFood" checked="checked">전체
+          <input type="radio" name="rFood" value="소고기">소고기
+          <input type="radio" name="rFood" value="돼지고기">돼지고기
+          <input type="radio" name="rFood" value="닭고기">닭고기
+          <input type="radio" name="rFood" value="육류">육류
+          <input type="radio" name="rFood" value="해물류">해물류
+          <input type="radio" name="rFood" value="가공식품류">가공식품류
+          <input type="radio" name="rFood" value="달걀/유제품">달걀/유제품
+          <input type="radio" name="rFood" value="쌀/밀가루">쌀/밀가루
+          <input type="radio" name="rFood" value="콩/견과류/곡류">콩/견과류/곡류
+        </td>
+      </tr>
+      <tr>
+        <th>소요시간</th>
+        <td>
+          <input type="radio" name="rTime" checked="checked">전체
+          <input type="radio" name="rTime" value="10">10분이내
+          <input type="radio" name="rTime" value="15">15분이내
+          <input type="radio" name="rTime" value="20">20분이내
+          <input type="radio" name="rTime" value="30">30분이내
+          <input type="radio" name="rTime" value="40">40분이내
+          <input type="radio" name="rTime" value="50">50분이내
+          <input type="radio" name="rTime" value="60">60분이내
+          <input type="radio" name="rTime" value="120">120분이내
+          <input type="radio" name="rTime" value="150">150분이내
+          <input type="radio" name="rTime" value="180">180분이내
+        </td>
+      </tr>
+    </table>
+
+    <input type="submit" value="검색">
+  </div>
+</form>
+
+
+
+
+<table>
+  <caption>레시피 목록</caption>
+  <tr>
+    <th>글번호</th>
+    <th>요리명</th>
+    <th>사진1</th>
+    <th>난이도</th>
+    <th>작성일</th>
+    <th>조회수</th>
+    <th>좋아요</th>
+    <th>버튼</th>
+
+  </tr>
+
+  <!-- th:href ="@{cView(cId=${session.loginId})} -->
+  <tr th:each="list : ${sList}">
+    <th th:text="${list.rNum}" id="rNum" th:value="${list.rNum}"></th>
+    <th><a th:text="${list.rName}" th:href="@{rView(rNum=${list.rNum})}"></a></th>
+    <th><img th:src="@{/img/recipe/{rPhotoName1}(rPhotoName1=${list.rPhotoName1})}" width="200px"></th>
+    <th th:text="${list.rLevel}">난이도</th>
+    <th th:text="${list.rDate}">작성일</th>
+    <th th:text="${list.rHit}">조회수</th>
+    <th th:text="${list.rLike}" th:value="${list.rLike}" >좋아요</th>
+    <th>
+      <input type="button" value="좋아요" th:onclick="like([[${list.rNum}]])">
+    </th>
+  </tr>
+
+
+</table>
+
+</body>
+
+<script type="text/javascript" src="/js/jquery3.6.0.js"></script>
+<script type="text/javascript">
+
+
+  // 좋아요 버튼
+  function like(lrNum) {
+
+    let lId = '[[${session.loginId}]]';
+    let lHeart = sLike(lrNum, lId);
+    let rLike = rLike1(lrNum);
+
+    if (lHeart == null) {
+      $.ajax({
+        type: "POST",
+        url: "insertLike",
+        data: {
+          "lrNum": lrNum,
+          "lId": lId,
+        }
+      });
+    }
+
+    if (lId == "") {
+      alert("로그인을 해주세요!")
+    } else {
+      $.ajax({
+        type: "POST",
+        url: "mLike",
+        data: {
+          "lrNum": lrNum,
+          "lId": lId,
+          "rLike": rLike,
+          "lHeart": lHeart
+        },
+        dataType: "json",
+        success: function (data) {
+          location.reload();
+        },
+        error: function () {
+          // 실패시
+
+        }
+      });
+    }
+
+
+
+
+  }
+
+  function rLike1(lrNum) {
+
+    let rLike;
+
+
+    $.ajax({
+      type: "POST",
+      url: "rLike",
+      data: {
+        "lrNum": lrNum
+      },
+      dataType: "text",
+      success: function (data) {
+
+
+        rLike = data;
+        console.log(rLike);
+
+        return rLike;
+      },
+      error: function () {
+        // 실패시
+
+        return 0;
+      }
+    });
+  }
+
+  function sLike(lrNum, lId) {
+
+    lId = '[[${session.loginId}]]';
+
+    $.ajax({
+      type: "POST",
+      url: "sLike",
+      data: {
+        "lrNum": lrNum,
+        "lId": lId,
+      },
+      dataType: "text",
+      success: function (lHeart) {
+
+        return lHeart;
+      },
+      error: function () {
+        // 실패시
+
+        return 4;
+      }
+    });
+  }
+
+
+</script>
+
+
+</html>

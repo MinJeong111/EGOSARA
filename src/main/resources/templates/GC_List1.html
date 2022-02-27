@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 리뷰 목록</title>
+
+</head>
+<body>
+
+<table>
+
+  <caption th:text="${session.loginId} + '리뷰 목록 보기'"></caption>
+  <tr>
+    <th>상품번호</th>
+    <th>댓글번호</th>
+    <th>작성자</th>
+    <th>리뷰내용</th>
+    <th>리뷰사진</th>
+    <th>별점</th>
+    <th></th>
+  </tr>
+  <tr th:each="list : ${gccommentList}">
+    <td th:text="${list.gcNum}"></td>
+    <td th:text="${list.gNo}"></td>
+    <td th:text="${list.gcId}"></td>
+    <td th:text="${list.gcContent}"></td>
+    <td><img th:src="@{/img/review/{gcPhoto}(gcPhoto=${list.gcPhoto})}" width="50px"></td>
+    <td th:text="${list.gcStar}"></td>
+    <td>
+      <input type="hidden" name="gNo" th:value="${list.gNo}">
+      <input type="hidden" name="gcId" th:value="${session.loginId}">
+      <a th:href="@{gcDelete(gNo=${list.gNo}, gcId=${session.loginId}, gcNum=${list.gcNum})}"><button>삭제</button></a>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

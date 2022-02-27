@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE-edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Group" content="SDS"/>
+    <meta name="author" content="seung"/>
+    <meta name="description" content="EgoSara D_List 페이지"/>
+    <title>Spring Boot - EgoSara</title>
+</head>
+<body>
+
+<table>
+    <caption th:text="${session.loginId} + '님의 찜한 상품'"></caption>
+    <tr>
+        <th>상품번호</th>
+        <th>상품이름</th>
+        <th>상품가격</th>
+        <th>상품사진</th>
+        <th>삭제</th>
+    </tr>
+
+    <tr th:each="list : ${dibList}">
+        <td th:text="${list.gNum}"></td>
+        <td><a th:href="@{gView(gNum=${list.gNum})}" th:text="${list.gName}"></a></td>
+        <td th:text="${list.gPrice}"></td>
+        <td><img th:src="@{/img/goods/{gPhoto}(gPhoto=${list.gPhoto})}" width="100px"></td>
+        <td>
+            <a th:href="@{dDelete(dId=${session.loginId}, dNum=${list.gNum})}"><button>삭제</button></a>
+        </td>
+    </tr>
+</table>
+
+</body>
+
+</html>

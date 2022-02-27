@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 목록</title>
+</head>
+<body>
+<table th:if="${session.loginId ne null || session.sloginId ne null}">
+    <caption>공지사항 목록</caption>
+    <tr>
+        <th>글번호</th>
+        <th>작성자</th>
+        <th>제목</th>
+        <th>작성일</th>
+    </tr>
+
+    <tr th:each="list : ${noticeList}">
+        <td th:text="${list.nNum}">글번호</td>
+        <td th:text="${list.nId}">작성자</td>
+        <td><a th:text="${list.nTitle}" th:href="@{nView(nNum=${list.nNum})}"></a></td>
+        <td th:text="${list.nDate}">작성일</td>
+    </tr>
+</table>
+
+
+</body>
+</html>
